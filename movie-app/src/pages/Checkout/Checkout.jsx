@@ -9,19 +9,24 @@ import {
 import _ from "lodash";
 import { Tabs } from "antd";
 import "./Checkout.css";
-import { DAT_VE } from "../../redux/actions/types/QuanLyDatVeType";
+import {
+  CHANGE_TAB_ACTIVE,
+  DAT_VE,
+} from "../../redux/actions/types/QuanLyDatVeType";
 import { ThongTinDatVe } from "../../_core/models/ThongTInDatVe";
 import { layThongTinNguoiDungAction } from "../../redux/actions/QuanLyNguoiDungAction";
 import moment from "moment";
+import { history } from "../../App";
+import { TOKEN, USER_LOGIN } from "../../util/setting/config";
+import { NavLink } from "react-router-dom";
 
 // import style from "./Checkout.module.css";
 
 function Checkout(props) {
   const { userLogin } = useSelector((state) => state.QuanLyNguoiDungReducer);
 
-  const { chiTietPhongVe, danhSachGheDangDat } = useSelector(
-    (state) => state.QuanLyDatVeReducer
-  );
+  const { chiTietPhongVe, danhSachGheDangDat, danhSachGheKhachDat } =
+    useSelector((state) => state.QuanLyDatVeReducer);
 
   console.log("chi tiet phong ve", chiTietPhongVe);
   console.log("danhsach ghe dang dat", danhSachGheDangDat);
@@ -48,6 +53,7 @@ function Checkout(props) {
       );
 
       let classGheDaDuocDat = "";
+
       if (userLogin.taiKhoan === ghe.taiKhoanNguoiDat) {
         classGheDaDuocDat = "gheDaDuocDat";
       }
@@ -114,6 +120,7 @@ function Checkout(props) {
                   <th>Ghế vip</th>
                   <th>Ghế đã đặt</th>
                   <th>Ghế mình đặt</th>
+                  <th>Ghế khách đang đặt</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -151,6 +158,14 @@ function Checkout(props) {
                   </td>
                   <td>
                     <button className="ghe gheDaDuocDat text-center">
+                      {" "}
+                      <CheckOutlined
+                        style={{ marginBottom: 7.5, fontWeight: "bold" }}
+                      />{" "}
+                    </button>{" "}
+                  </td>
+                  <td>
+                    <button className="ghe gheKhachDat text-center">
                       {" "}
                       <CheckOutlined
                         style={{ marginBottom: 7.5, fontWeight: "bold" }}
@@ -240,16 +255,84 @@ function Checkout(props) {
   );
 }
 
-export default function (props) {
+export default function CheckoutTab(props) {
+  const { tabActive } = useSelector((state) => state.QuanLyDatVeReducer);
+
+  const { userLogin } = useSelector((state) => state.QuanLyNguoiDungReducer);
+
+  useEffect(() => {
+    return () => {
+      dispatch({
+        type: CHANGE_TAB_ACTIVE,
+        number: "1",
+      });
+    };
+  }, []);
+
+  const operations = (
+    <Fragment>
+      {!_.isEmpty(userLogin) ? (
+        <button
+          onClick={() => {
+            history.push("/profile");
+          }}
+        >
+          <div
+            style={{
+              width: 50,
+              height: 50,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            className="text-2xl ml-5 rounded-full bg-red-200"
+          >
+            {userLogin.taiKhoan.substr(0, 1)}
+          </div>
+          Hello ! {userLogin.taiKhoan}
+        </button>
+      ) : (
+        ""
+      )}
+      <button
+        onClick={() => {
+          localStorage.removeItem(USER_LOGIN);
+          localStorage.removeItem(TOKEN);
+          history.push("/home");
+          window.location.reload();
+        }}
+        className="text-blue-800"
+      >
+        Đăng xuất
+      </button>
+    </Fragment>
+  );
+
+  const dispatch = useDispatch();
+  console.log("tabActive", tabActive);
   return (
     <div className="p-5">
-      <Tabs defaultActiveKey="1">
+      <Tabs
+        tabBarExtraContent={operations}
+        defaultActiveKey="1"
+        activeKey={tabActive}
+        onChange={(key) => {
+          dispatch({
+            type: CHANGE_TAB_ACTIVE,
+            number: key,
+          });
+        }}
+      >
         <Tabs.TabPane tab="01 CHỌN GHẾ & THANH TOÁN" key="1">
           <Checkout {...props} />
         </Tabs.TabPane>
         <Tabs.TabPane tab="02 KẾT QUẢ ĐẶT VÉ" key="2">
           <KetQuaDatVe {...props} />
         </Tabs.TabPane>
+        <Tabs.TabPane
+          tab={<NavLink to="/">Home</NavLink>}
+          key="3"
+        ></Tabs.TabPane>
       </Tabs>
     </div>
   );

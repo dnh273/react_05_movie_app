@@ -12,6 +12,13 @@ import Checkout from './pages/Checkout/Checkout';
 import { lazy, Suspense } from 'react';
 import { UserTemplate } from './Templates/UserTemplate/UserTemplate';
 import Loading from './components/Loading/Loading';
+import Profile from './pages/Profile/Profile';
+import AddNew from './pages/Admin/Films/AddNew/AddNew';
+import Dashboard from './pages/Admin/Dashbroad/Dashbroad';
+import Films from './pages/Admin/Films/Flim';
+import Edit from './pages/Admin/Films/Edit/Edit';
+import ShowTime from './pages/Admin/Showtime/Showtime';
+import AdminTemplate from './Templates/AdminTemplate/AdminTemplate';
 
 const CheckoutTemplateLazy = lazy(() =>
   import('./Templates/CheckoutTemplate/CheckoutTemplate')
@@ -30,7 +37,17 @@ function App() {
         <UserTemplate path="/detail/:id" exact Component={Detail} />
         <HomeTemplate path='/contact' exact Component={Contact}></HomeTemplate>
         <UserTemplate path='/login' exact Component={Login} />
-        <Route path='/register' exact Component={Register}></Route>
+        <UserTemplate path='/register' exact Component={Register} />
+        <HomeTemplate path='/profile' exact Component={Profile} />
+
+        <AdminTemplate path="/admin" exact Component={Dashboard} />
+        <AdminTemplate path="/admin/films" exact Component={Films} />
+        <AdminTemplate path="/admin/films/addnew" exact Component={AddNew} />
+        <AdminTemplate path="/admin/films/edit/:id" exact Component={Edit} />
+        <AdminTemplate path="/admin/films/showtime/:id/:tenphim" exact Component={ShowTime} />
+
+        <AdminTemplate path="/admin/users" exact Component={Dashboard} />
+
         <HomeTemplate path='/' exact Component={Home}></HomeTemplate>
         <CheckoutTemplateLazy path="/checkout/:id" exact component={Checkout} />
 

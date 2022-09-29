@@ -1,6 +1,7 @@
 // Định nghĩa các tham số cố định
 
 export const DOMAIN = "http://movieapi.cyberlearn.vn";
+
 export const TOKEN = "assessToken";
 export const GROUPID = 'GP00'
 

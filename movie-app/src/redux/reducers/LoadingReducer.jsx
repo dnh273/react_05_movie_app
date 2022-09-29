@@ -1,7 +1,7 @@
 import { DISPLAY_LOADING, HIDE_LOADING } from "../actions/types/LoadingType";
 
 const initialState = {
-  isLoading: true,
+  isLoading: false,
 };
 
 export const LoadingReducer = (state = initialState, action) => {
@@ -17,6 +17,6 @@ export const LoadingReducer = (state = initialState, action) => {
     }
 
     default:
-      return { ...action };
+      return { ...state };
   }
 };

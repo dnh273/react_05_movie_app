@@ -3,7 +3,10 @@ import {
   CAP_NHAT_THONG_TIN_ACTION,
   DANG_KY_ACTION,
   DANG_NHAP_ACTION,
+  KIEM_TRA_THEM_NGUOI_DUNG,
+  SET_DANH_SACH_NGUOI_DUNG,
   SET_THONG_TIN_NGUOI_DUNG,
+  THEM_NGUOI_DUNG,
 } from "./types/QuanLyNguoiDungType";
 import { history } from "../../App";
 import Swal from "sweetalert2";
@@ -19,7 +22,7 @@ export const dangNhapAction = (thongTinDangNhap) => {
           thongTinDangNhap: result.data.content,
         });
         // Chuyen ve trang truoc do
-        history.goBack('./home');
+        history.goBack("./home");
       }
     } catch (error) {
       console.log("error", error);
@@ -27,10 +30,10 @@ export const dangNhapAction = (thongTinDangNhap) => {
   };
 };
 
-export const layThongTinNguoiDungAction = () => {
+export const layThongTinNguoiDungAction = (value) => {
   return async (dispatch) => {
     try {
-      const result = await quanLyNguoiDungService.layThongTinNguoiDung();
+      const result = await quanLyNguoiDungService.layThongTinNguoiDung(value);
       if (result.data.statusCode === 200) {
         dispatch({
           type: SET_THONG_TIN_NGUOI_DUNG,
@@ -49,17 +52,13 @@ export const dangKyAction = (thongTinDangKy) => {
       const result = await quanLyNguoiDungService.dangKy(thongTinDangKy);
       console.log(result);
       if (result.data.statusCode === 200) {
-        await dispatch({
-          type: DANG_KY_ACTION,
-        });
         // Chuyen ve trang truoc do
         await Swal.fire({
           title: "Đăng ký thành công!",
           icon: "success", //success, error, warning, question
           confirmButtonText: "OK",
         });
-
-        history.goBack("./");
+        history.goBack("./home");
       }
     } catch (error) {
       console.log("error", error);
@@ -91,6 +90,44 @@ export const capNhatThongTinAction = (thongTinCapNhat) => {
       }
     } catch (error) {
       console.log(error);
+    }
+  };
+};
+
+export const layDanhSachNguoiDungAction = () => {
+  return async (dispatch) => {
+    try {
+      const result = await quanLyNguoiDungService.layDanhSachNguoiDung();
+      dispatch({
+        type: SET_DANH_SACH_NGUOI_DUNG,
+        danhSachNguoiDung: result.data.content,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const themNguoiDungAction = (thongTinThemNguoiDung) => {
+  return async (dispatch) => {
+    try {
+      const result = await quanLyNguoiDungService.themNguoiDung(
+        thongTinThemNguoiDung
+      );
+      if (result.data.statusCode === 200) {
+        Swal.fire({
+          title: "Thêm người dùng thành công!",
+          icon: "success", //success, error, warning, question
+          confirmButtonText: "OK",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+console.log('check',error.response.data.content)
+      dispatch({
+        type: KIEM_TRA_THEM_NGUOI_DUNG,
+        data: `${error.response.data.content}`,
+      });
     }
   };
 };

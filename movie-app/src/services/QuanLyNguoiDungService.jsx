@@ -6,20 +6,32 @@ export class QuanLyNguoiDungService extends baseServices {
     super();
   }
 
-  dangNhap = (thongTinDangNhap) => { // {taiKhoan: '', matKhau: ''}
+  dangNhap = (thongTinDangNhap) => {
+    // {taiKhoan: '', matKhau: ''}
     return this.post(`/api/QuanLyNguoiDung/DangNhap`, thongTinDangNhap);
   };
 
   layThongTinNguoiDung = () => {
-    return this.post(`api/QuanLyNguoiDung/ThongTinTaiKhoan`)
-  }
+    return this.post(`api/QuanLyNguoiDung/ThongTinTaiKhoan`);
+  };
 
   dangKy = (thongTinDangKy) => {
-    return this.post(`/api/QuanLyNguoiDung/DangKy`,thongTinDangKy)
-  }
+    return this.post(`/api/QuanLyNguoiDung/DangKy`, thongTinDangKy);
+  };
 
   capNhatThongTinNguoiDung = (thongTinCapNhat) => {
-    return this.put(`/api/QuanLyNguoiDung/CapNhatThongTinNguoiDung`,thongTinCapNhat)
+    return this.put(
+      `/api/QuanLyNguoiDung/CapNhatThongTinNguoiDung`,
+      thongTinCapNhat
+    );
+  };
+
+  layDanhSachNguoiDung = () => {
+    return this.get(`/api/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${GROUPID}`);
+  };
+
+  themNguoiDung = (thongTinThemNguoiDung) => {
+    return this.post(`/api/QuanLyNguoiDung/ThemNguoiDung`, thongTinThemNguoiDung)
   }
 }
 

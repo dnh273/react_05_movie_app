@@ -28,10 +28,7 @@ const Edit = (props) => {
 
   useEffect(() => {
     let { id } = props.match.params;
-
     dispatch(layThongTinPhimAction(id));
-
-
   }, [])
 
 

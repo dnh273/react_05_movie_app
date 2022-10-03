@@ -7,8 +7,12 @@ import { quanLyRapService } from '../../../services/QuanLyRapServices';
 import { useFormik } from 'formik';
 import moment from 'moment';
 import { quanLyDatVeService } from '../../../services/QuanLyDatVeService';
+import { NavLink } from 'react-router-dom';
 
 export default function ShowTime(props) {
+
+
+ 
 
     const formik =  useFormik({
         initialValues:{
@@ -94,7 +98,6 @@ export default function ShowTime(props) {
         })
     }
 
-    console.log(props.match.params);
     let film = {};
     if(localStorage.getItem('filmParams')) {
         film = JSON.parse(localStorage.getItem('filmParams'));

@@ -7,6 +7,7 @@ import {
   SET_DANH_SACH_NGUOI_DUNG,
   SET_THONG_TIN_NGUOI_DUNG,
   THEM_NGUOI_DUNG,
+  TIM_KIEM_NGUOI_DUNG,
 } from "./types/QuanLyNguoiDungType";
 import { history } from "../../App";
 import Swal from "sweetalert2";
@@ -89,15 +90,46 @@ export const capNhatThongTinAction = (thongTinCapNhat) => {
         console.log(result);
       }
     } catch (error) {
+      Swal.fire({
+        title: "Cập nhật thông tin thất bại!",
+        html: `${error.response.data.content}`,
+        icon: "error", //success, error, warning, question
+        confirmButtonText: "OK",
+      });
+    }
+  };
+};
+
+export const capNhatThongTinAdminAction = (thongTinCapNhat) => {
+  return async (dispatch) => {
+    try {
+      const result = await quanLyNguoiDungService.capNhatThongTinNguoiDungAdmin(
+        thongTinCapNhat
+      );
+      if (result.data.statusCode === 200) {
+        console.log(result);
+        Swal.fire({
+          title: "Cập nhật thành công!",
+          icon: "success", //success, error, warning, question
+          confirmButtonText: "OK",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Cập nhật thông tin thất bại!",
+        html: `${error.response.data.content}`,
+        icon: "error", //success, error, warning, question
+        confirmButtonText: "OK",
+      });
       console.log(error);
     }
   };
 };
 
-export const layDanhSachNguoiDungAction = () => {
+export const layDanhSachNguoiDungAction = (value) => {
   return async (dispatch) => {
     try {
-      const result = await quanLyNguoiDungService.layDanhSachNguoiDung();
+      const result = await quanLyNguoiDungService.layDanhSachNguoiDung(value);
       dispatch({
         type: SET_DANH_SACH_NGUOI_DUNG,
         danhSachNguoiDung: result.data.content,
@@ -123,10 +155,50 @@ export const themNguoiDungAction = (thongTinThemNguoiDung) => {
       }
     } catch (error) {
       console.log(error);
-console.log('check',error.response.data.content)
+      console.log("check", error.response.data.content);
       dispatch({
         type: KIEM_TRA_THEM_NGUOI_DUNG,
         data: `${error.response.data.content}`,
+      });
+    }
+  };
+};
+
+export const timKiemNguoiDungAction = (taiKhoanNguoiDung) => {
+  return async (dispatch) => {
+    try {
+      const result = await quanLyNguoiDungService.timKiemNguoiDung(
+        taiKhoanNguoiDung
+      );
+      console.log(result);
+      dispatch({ type: TIM_KIEM_NGUOI_DUNG, user: result.data.content });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const xoaNguoiDungAction = (taiKhoanNguoiDung) => {
+  return async (dispatch) => {
+    try {
+      const result = await quanLyNguoiDungService.xoaNguoiDung(
+        taiKhoanNguoiDung
+      );
+      if (result.data.statusCode === 200) {
+        Swal.fire({
+          title: "Xoá người dùng thành công!",
+          icon: "success", //success, error, warning, question
+          confirmButtonText: "OK",
+        });
+        dispatch(layDanhSachNguoiDungAction());
+      }
+    } catch (error) {
+      console.log("error", error);
+      Swal.fire({
+        title: "Xoá người dùng thất bại!",
+        html: `${error.response.data.content}`,
+        icon: "error", //success, error, warning, question
+        confirmButtonText: "OK",
       });
     }
   };

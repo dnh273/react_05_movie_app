@@ -15,7 +15,6 @@ export default function Flim() {
 
     const dispatch = useDispatch();
 
-    console.log('arrFilmDefault', arrFilmDefault);
 
     useEffect(() => {
         dispatch(layDanhSachPhimAction());
@@ -109,7 +108,6 @@ export default function Flim() {
 
     const onSearch = value => {
 
-        console.log(value);
         //Gọi api layDanhSachPhim
         dispatch(layDanhSachPhimAction(value));
 

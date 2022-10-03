@@ -2,7 +2,10 @@ import React, { Fragment } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { layDanhSachNguoiDungAction } from "../../../redux/actions/QuanLyNguoiDungAction";
+import {
+  layDanhSachNguoiDungAction,
+  xoaNguoiDungAction,
+} from "../../../redux/actions/QuanLyNguoiDungAction";
 
 import {
   AudioOutlined,
@@ -23,7 +26,6 @@ export default function Dashboard(props) {
 
   const dispatch = useDispatch();
 
-  console.log("danhSach", danhSachNguoiDung);
   useEffect(() => {
     dispatch(layDanhSachNguoiDungAction());
   }, []);
@@ -92,20 +94,50 @@ export default function Dashboard(props) {
     },
 
     {
-      title: "Address",
-      dataIndex: "address",
+      title: "Hành động",
+      dataIndex: "taiKhoan",
+      render: (text, user) => {
+        return (
+          <Fragment>
+            <NavLink
+              key={1}
+              className=" mr-2  text-2xl"
+              to={`/admin/users/edit/${user.taiKhoan}`}
+            >
+              <EditOutlined style={{ color: "blue" }} />{" "}
+            </NavLink>
+            <span
+              style={{ cursor: "pointer" }}
+              key={2}
+              className="text-2xl"
+              onClick={() => {
+                //Gọi action xoá
+                if (
+                  window.confirm(
+                    "Bạn có chắc muốn xoá tài khoản " + user.taiKhoan
+                  )
+                ) {
+                  //Gọi action
+                  dispatch(xoaNguoiDungAction(user.taiKhoan));
+                }
+              }}
+            >
+              <DeleteOutlined style={{ color: "red" }} />{" "}
+            </span>
+          </Fragment>
+        );
+      },
     },
   ];
   const data = danhSachNguoiDung;
 
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
+    // console.log("params", pagination, filters, sorter, extra);
   };
 
   const onSearch = (value) => {
-    console.log(value);
     //Gọi api layDanhSachPhim
-    // dispatch(layDanhSachPhimAction(value));
+    dispatch(layDanhSachNguoiDungAction(value));
   };
 
   return (
@@ -114,12 +146,12 @@ export default function Dashboard(props) {
       <Button
         className="mb-5"
         onClick={() => {
-          // history.push("/admin/films/addnew");
+          history.push("/admin/users/addnewuser");
         }}
       >
-        Thêm phim
+        Thêm người dùng
       </Button>
-      {/* <Search placeholder="input search text" onSearch={onSearch} style={{ width: 200 }} /> */}
+
       <Search
         className="mb-5"
         placeholder="input search text"

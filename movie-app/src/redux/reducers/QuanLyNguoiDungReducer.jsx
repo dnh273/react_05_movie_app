@@ -4,6 +4,7 @@ import {
   KIEM_TRA_THEM_NGUOI_DUNG,
   SET_DANH_SACH_NGUOI_DUNG,
   SET_THONG_TIN_NGUOI_DUNG,
+  TIM_KIEM_NGUOI_DUNG,
 } from "../actions/types/QuanLyNguoiDungType";
 
 let user = {};
@@ -16,6 +17,7 @@ const initialState = {
   thongTinNguoiDung: {},
   danhSachNguoiDung: [],
   kiemTraThemNguoiDung: {},
+  thongTinTimKiemUser: [],
 };
 
 export const QuanLyNguoiDungReducer = (state = initialState, action) => {
@@ -45,6 +47,11 @@ export const QuanLyNguoiDungReducer = (state = initialState, action) => {
     case KIEM_TRA_THEM_NGUOI_DUNG: {
       console.log(action.data);
       state.kiemTraThemNguoiDung = action.data;
+      return { ...state };
+    }
+
+    case TIM_KIEM_NGUOI_DUNG: {
+      state.thongTinTimKiemUser = action.user;
       return { ...state };
     }
 

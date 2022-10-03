@@ -26,13 +26,42 @@ export class QuanLyNguoiDungService extends baseServices {
     );
   };
 
-  layDanhSachNguoiDung = () => {
-    return this.get(`/api/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${GROUPID}`);
+  capNhatThongTinNguoiDungAdmin = (thongTinCapNhat) => {
+    return this.post(
+      `api/QuanLyNguoiDung/CapNhatThongTinNguoiDung`,
+      thongTinCapNhat
+    );
+  };
+
+  layDanhSachNguoiDung = (tuKhoa = "") => {
+    if (tuKhoa.trim() != "") {
+      return this.get(
+        `/api/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${GROUPID}&tuKhoa=${tuKhoa}`
+      );
+    }
+    return this.get(
+      `/api/QuanLyNguoiDung/LayDanhSachNguoiDung?MaNhom=${GROUPID}`
+    );
   };
 
   themNguoiDung = (thongTinThemNguoiDung) => {
-    return this.post(`/api/QuanLyNguoiDung/ThemNguoiDung`, thongTinThemNguoiDung)
-  }
+    return this.post(
+      `/api/QuanLyNguoiDung/ThemNguoiDung`,
+      thongTinThemNguoiDung
+    );
+  };
+
+  timKiemNguoiDung = (taiKhoanNguoiDung) => {
+    return this.get(
+      `/api/QuanLyNguoiDung/TimKiemNguoiDung?MaNhom=${GROUPID}&tuKhoa=${taiKhoanNguoiDung}`
+    );
+  };
+
+  xoaNguoiDung = (taiKhoanNguoiDung) => {
+    return this.delete(
+      `/api/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=${taiKhoanNguoiDung}`
+    );
+  };
 }
 
 export const quanLyNguoiDungService = new QuanLyNguoiDungService();

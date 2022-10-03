@@ -1,29 +1,46 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { themNguoiDungAction } from "../../../../redux/actions/QuanLyNguoiDungAction";
+import {
+  capNhatThongTinAction,
+  capNhatThongTinAdminAction,
+  themNguoiDungAction,
+  timKiemNguoiDungAction,
+} from "../../../../redux/actions/QuanLyNguoiDungAction";
 import { GROUPID } from "../../../../util/setting/config";
 
-const AddNewUser = () => {
+const EditUser = (props) => {
+  const { thongTinTimKiemUser } = useSelector(
+    (state) => state.QuanLyNguoiDungReducer
+  );
+
+  let { id } = props.match.params;
+  const dispatch = useDispatch();
+
+  const thongTinNguoiDung = thongTinTimKiemUser[0];
+
+  useEffect(() => {
+    dispatch(timKiemNguoiDungAction(id));
+  }, []);
+
+  useEffect(() => {
+    if (thongTinNguoiDung) reset(thongTinNguoiDung);
+  }, [thongTinNguoiDung]);
+
   const {
     register,
     handleSubmit,
     watch,
     reset,
     formState: { errors },
-  } = useForm();
-
-  const dispatch = useDispatch();
-
-  const { kiemTraThemNguoiDung } = useSelector(
-    (state) => state.QuanLyNguoiDungReducer
-  );
-
+  } = useForm({
+    defaultValues: thongTinNguoiDung,
+  });
 
   const onSubmit = (data) => {
     let newData = { ...data, maNhom: `${GROUPID}` };
-    dispatch(themNguoiDungAction(newData));
- 
+    dispatch(capNhatThongTinAdminAction(newData));
   };
 
   return (
@@ -38,8 +55,7 @@ const AddNewUser = () => {
               Tài khoản
             </label>
             <input
-              className="appearance-none block w-full text-gray-700
-            bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               type="text"
               {...register("taiKhoan", {
                 required: "Vui lòng điền tài khoản",
@@ -48,6 +64,7 @@ const AddNewUser = () => {
                   message: "Tài khoản phải có 6 ký tự trở lên",
                 },
               })}
+              disabled
             />
             <p className="text-red-500 text-xs italic">
               {errors.taiKhoan?.message}
@@ -59,8 +76,8 @@ const AddNewUser = () => {
             </label>
             <input
               className="appearance-none block w-full text-gray-700
-            bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-              type="password"
+          bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              type="text"
               {...register("matKhau", {
                 required: "Vui lòng điền mật khẩu",
                 minLength: {
@@ -82,7 +99,7 @@ const AddNewUser = () => {
             </label>
             <input
               className="appearance-none block w-full text-gray-700
-          bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               type="text"
               {...register("hoTen", {
                 required: "Họ tên không được bỏ trống",
@@ -101,9 +118,9 @@ const AddNewUser = () => {
               Email
             </label>
             <input
-              className="appearance-none block w-full text-gray-700
-            bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className="appearance-none block w-full bg-gray-200 text-gray-700 border rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
               type="email"
+              disabled
               {...register("email", {
                 required: "Vui lòng điền email",
                 pattern: {
@@ -125,9 +142,9 @@ const AddNewUser = () => {
             </label>
             <input
               className="appearance-none block w-full text-gray-700
-          bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               type="text"
-              {...register("soDT", {
+              {...register("soDt", {
                 required: "Không được bỏ trống số điện thoại",
                 pattern: {
                   value: /(84|0[3|5|7|8|9])+([0-9]{8})\b/,
@@ -144,8 +161,8 @@ const AddNewUser = () => {
               Loại người dùng
             </label>
             <select
-              class="block w-full text-gray-700
-          bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+              className="block w-full text-gray-700
+        bg-white bg-clip-padding border border-gray-300 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
               {...register("maLoaiNguoiDung")}
             >
               <option value="KhachHang">Khách hàng</option>
@@ -153,14 +170,13 @@ const AddNewUser = () => {
             </select>
           </div>
         </div>
-        <p className="text-red-500 text-xs italic">{kiemTraThemNguoiDung}</p>
         <div className="flex flex-wrap">
           <button
             type="submit"
             className="
-    w-full
-    h-full
-    py-3 px-4
+  w-full
+  h-full
+  py-3 px-4
 bg-blue-600
 text-white
 font-medium
@@ -176,7 +192,7 @@ transition
 duration-150
 ease-in-out"
           >
-            Thêm người dùng
+            Cập nhật
           </button>
         </div>
       </form>
@@ -184,4 +200,4 @@ ease-in-out"
   );
 };
 
-export default AddNewUser;
+export default EditUser;
